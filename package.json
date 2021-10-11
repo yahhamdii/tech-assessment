@@ -1,0 +1,17 @@
+{
+  "name": "luckycart-tech-assesment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^9.1.2",
+    "should": "^13.2.3"
+  }
+}
