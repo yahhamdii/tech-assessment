@@ -14,8 +14,15 @@ describe('Eligibility', () => {
   });
 
   describe('Basic condition', () => {
-    it('should not be eligible when basic integer condition is not fulfilled', () => {
+    it('should not be eligible when basic integer condition is not fulfilled (does not exist)', () => {
       const cart = {};
+      const profile = {total: 20};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.false();
+    });
+    it('should not be eligible when basic integer condition is not fulfilled (wrong value)', () => {
+      const cart = {total: 30};
       const profile = {total: 20};
       const eligibilityService = new EligibilityService();
       const actualEligibility = eligibilityService.isEligible(cart, profile);
@@ -28,8 +35,15 @@ describe('Eligibility', () => {
       const actualEligibility = eligibilityService.isEligible(cart, profile);
       should(actualEligibility).be.true();
     });
-    it('should not be eligible when basic string condition is not fulfilled', () => {
+    it('should not be eligible when basic string condition is not fulfilled (does not exist)', () => {
       const cart = {};
+      const profile = {shopperId: 'shopper-id'};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.false();
+    });
+    it('should not be eligible when basic string condition is not fulfilled (wrong value)', () => {
+      const cart = {shopperId: 'other-shopper-id'};
       const profile = {shopperId: 'shopper-id'};
       const eligibilityService = new EligibilityService();
       const actualEligibility = eligibilityService.isEligible(cart, profile);
@@ -171,16 +185,23 @@ describe('Eligibility', () => {
   });
 
   describe('And condition', () => {
-    it('should not be eligible when and condition is not fulfilled', () => {
-      const cart = {shopperId: 'shopper-id', total: 20};
-      const profile = {shopperId: {and: {shopperId: 'shopper-id', total: 30}}};
+    it('should not be eligible when and condition is not fulfilled (none)', () => {
+      const cart = {total: 0};
+      const profile = {total: {and: {gt: 10, gt: 20}}};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.false();
+    });
+    it('should not be eligible when and condition is not fulfilled (only one)', () => {
+      const cart = {total: 30};
+      const profile = {total: {and: {gt: 10, lt: 20}}};
       const eligibilityService = new EligibilityService();
       const actualEligibility = eligibilityService.isEligible(cart, profile);
       should(actualEligibility).be.false();
     });
     it('should be eligible when and condition is fulfilled', () => {
-      const cart = {shopperId: 'shopper-id', total: 30};
-      const profile = {shopperId: {and: {shopperId: 'shopper-id', total: 30}}};
+      const cart = { total: 20};
+      const profile = {total: {and: {gt: 10, lt: 30}}};
       const eligibilityService = new EligibilityService();
       const actualEligibility = eligibilityService.isEligible(cart, profile);
       should(actualEligibility).be.true();
@@ -189,15 +210,60 @@ describe('Eligibility', () => {
 
   describe('Or condition', () => {
     it('should not be eligible when or condition is not fulfilled', () => {
-      const cart = {shopperId: 'shopper-id0', total: 20};
-      const profile = {shopperId: {or: {shopperId: 'shopper-id1', total: 30}}};
+      const cart = {total: 0};
+      const profile = {total: {or: {gt: 10, gt: 20}}};
       const eligibilityService = new EligibilityService();
       const actualEligibility = eligibilityService.isEligible(cart, profile);
       should(actualEligibility).be.false();
     });
     it('should be eligible when or condition is fulfilled', () => {
-      const cart = {shopperId: 'shopper-id0', total: 30};
-      const profile = {shopperId: {or: {shopperId: 'shopper-id1', total: 30}}};
+      const cart = {total: 0};
+      const profile = {total: {or: {gt: 10, lt: 20}}};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.true();
+    });
+  });
+
+  describe('Sub-object condition', () => {
+    it('should not be eligible when sub object condition is not fulfilled (first level field does not exist)', () => {
+      const cart = {};
+      const profile = {'products.quantity': 1};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.false();
+    });
+    it('should not be eligible when sub object condition is not fulfilled (second level field does not exist)', () => {
+      const cart = {products:{}};
+      const profile = {'products.quantity': 1};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.false();
+    });
+    it('should not be eligible when sub object condition is not fulfilled (wrong value)', () => {
+      const cart = {products:{quantity:2}};
+      const profile = {'products.quantity': 1};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.false();
+    });
+    it('should be eligible when sub object condition is fulfilled', () => {
+      const cart = {products:{quantity:1}};
+      const profile = {'products.quantity': 1};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.true();
+    });
+    it('should not be eligible when array sub object condition is not fulfilled', () => {
+      const cart = {products:[{quantity:2}]};
+      const profile = {'products.quantity': 1};
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, profile);
+      should(actualEligibility).be.false();
+    });
+    it('should be eligible when array sub object condition is fulfilled', () => {
+      const cart = {products:[{quantity:1}]};
+      const profile = {'products.quantity': 1};
       const eligibilityService = new EligibilityService();
       const actualEligibility = eligibilityService.isEligible(cart, profile);
       should(actualEligibility).be.true();
@@ -229,7 +295,7 @@ describe('Eligibility', () => {
       }
       const profile = {
         "shopperId": "shopper-id",
-        "total": {
+        "totalAti": {
           "gt": 50
         },
         "products.productId": {
