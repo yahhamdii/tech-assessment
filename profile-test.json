@@ -1,6 +1,6 @@
 {
   "shopperId": "shopper-id",
-  "total": {
+  "totalAti": {
     "gt": 50
   },
   "products.productId": {
