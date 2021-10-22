@@ -47,9 +47,9 @@ Cart example:
 
 Profile are a list of key-conditions values (eg: `{key1: condition1, key2: condition2}`). If all the conditions are fulfilled then the cart is eligible.
 
-To validate a condition, you have to compare the condition the value of the same key in the cart. If there is some "." in the key, compare to the value of the sub-object (eg: `{ "products.productId": condition }` in profile means to check `{ products: [{ productId: value }] }` in cart). 
+To validate a condition, you have to compare the condition with the value of the same key in the cart. If there is some "." in the key, compare to the value of the sub-object (eg: `{ "products.productId": condition }` in profile means to check `{ products: [{ productId: value }] }` in cart). 
 
-Available conditions:
+Available condition types:
 - Basic condition (eg: `total: 20`) matches when `total == 20`;
 - `gt`, `lt`, `gte`, `lte` matches respectively when cart value is greater, lower, greater or equal, lower or equal;
 - `in` (followed by an array) matches when cart value is in the following array;
