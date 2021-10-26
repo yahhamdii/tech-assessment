@@ -1,13 +1,13 @@
 class EligibilityService {
   /**
-   * Compare cart data with profile conditions to compute eligibility.
-   * If all profile conditions are fulfilled then the cart is eligible.
+   * Compare cart data with criteria to compute eligibility.
+   * If all criteria are fulfilled then the cart is eligible (return true).
    *
    * @param cart
-   * @param profile
+   * @param criteria
    * @return {boolean}
    */
-  isEligible(cart, profile) {
+  isEligible(cart, criteria) {
     // TODO: compute cart eligibility here.
     return false;
   }

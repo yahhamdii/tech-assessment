@@ -1,14 +1,14 @@
 # Lucky Cart – Technical Assessment
 
-In this assessment, you have to calculate cart eligibility to a campaign. To do so, you have to compare profile conditions with cart data.
+In this assessment, you have to calculate cart eligibility to a campaign. To do so, you have to compare criteria with cart data.
 
 ## How to do the assessment
 
 1. Read this entire documentation
 2. Clone this repository
-3. Open [src/eligibility.service.js](./src/eligibility.service.js) file and edit `isEligible(cart, profile)` method.
-4. Run `npm start` or `node index.js ./cart-test.json ./profile-test.json` to check results
-5. You can edit [cart-test.json](./cart-test.json) or [profile-test.json](./profile-test.json) for more tests.
+3. Open [src/eligibility.service.js](./src/eligibility.service.js) file and edit `isEligible(cart, criteria)` method.
+4. Run `npm start` or `node index.js ./cart-test.json ./criteria-test.json` to check results
+5. You can edit [cart-test.json](./cart-test.json) or [criteria-test.json](./criteria-test.json) for more tests.
 
 You are free to use internet (Google, StackOverflow, ...), to ask question or do whatever you want to pass this assessment.
 
@@ -43,11 +43,11 @@ Cart example:
 }
 ```
 
-## Profiles
+## Criteria
 
-Profile are a list of key-conditions values (eg: `{key1: condition1, key2: condition2}`). If all the conditions are fulfilled then the cart is eligible.
+Criteria are a list of key-conditions values (eg: `{key1: condition1, key2: condition2}`). If all the conditions are fulfilled then the cart is eligible.
 
-To validate a condition, you have to compare the condition with the value of the same key in the cart. If there is some "." in the key, compare to the value of the sub-object (eg: `{ "products.productId": condition }` in profile means to check `{ products: [{ productId: value }] }` in cart). 
+To validate a condition, you have to compare the condition with the value of the same key in the cart. If there is some "." in the key, compare to the value of the sub-object (eg: `{ "products.productId": condition }` in criteria means to check `{ products: [{ productId: value }] }` in cart). 
 
 Available condition types:
 - Basic condition (eg: `total: 20`) matches when `total == 20`;
@@ -59,7 +59,7 @@ Available condition types:
 ⚠️ Conditions are typeless! `{ total: 20 }` matches `{ total: "20" }` and `{ total: 20.0 }`.
 
 
-Profile example:
+Criteria example:
 ```json
 {
   "shopperId": "shopper-id",
@@ -80,7 +80,7 @@ Profile example:
 
 ## Examples
 
-Profile:
+Criteria:
 ```json
 {
   "shopperId": "eligible-shopper-id",
