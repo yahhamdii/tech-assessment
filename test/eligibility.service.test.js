@@ -70,6 +70,30 @@ describe('Eligibility', () => {
       const actualEligibility = eligibilityService.isEligible(cart, criteria);
       should(actualEligibility).be.true();
     });
+    it('should be eligible with random keys and value', () => {
+      const key = (Math.random() + 1).toString(36).substring(7);
+      const value = Math.floor(Math.random() * 100);
+      const cart = {};
+      const criteria = {};
+      cart[key] = value;
+      criteria[key] = value;
+
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, criteria);
+      should(actualEligibility).be.true();
+    });
+    it('should not be eligible with random keys and different value', () => {
+      const key = (Math.random() + 1).toString(36).substring(7);
+      const value = Math.floor(Math.random() * 100);
+      const cart = {};
+      const criteria = {};
+      cart[key] = value;
+      criteria[key] = value + 1;
+
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, criteria);
+      should(actualEligibility).be.false();
+    });
   });
 
   describe('Gt condition', () => {
@@ -303,14 +327,14 @@ describe('Eligibility', () => {
         },
         "date": {
           "and": {
-            "gt": "2021-01-01T00:00:00.000Z",
+            "gt": "2021-11-01T00:00:00.000Z",
             "lt": "2021-12-31T23:59:59.000Z"
           }
         }
       };
       const eligibilityService = new EligibilityService();
       const actualEligibility = eligibilityService.isEligible(cart, criteria);
-      should(actualEligibility).be.true();
+      should(actualEligibility).be.false();
     });
   });
 });
